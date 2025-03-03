@@ -1,0 +1,38 @@
+### (*) Optional: 4. Modern PCA Applications (2 points)
+
+Choose ONE of the following advanced tasks:
+
+#### Option A: Robust PCA for Noisy Image Reconstruction
+
+1. Take 10 sample images from MNIST
+2. Add random noise and some structured outliers (e.g., salt and pepper noise)
+3. Apply both standard PCA and Robust PCA for denoising
+4. Compare the results quantitatively (using metrics like PSNR, SSIM) and qualitatively
+
+#### Option B: Incremental PCA for Large Datasets
+
+1. Load the Fashion-MNIST dataset (a more complex alternative to MNIST)
+2. Implement a streaming data scenario by processing the dataset in small batches
+3. Apply Incremental PCA and compare its performance (both in terms of computation time and accuracy) with standard PCA
+4. Visualize how the principal components evolve as more data is processed
+
+#### Option C: PCA in Convolutional Autoencoder
+
+1. Implement a simple convolutional autoencoder for MNIST digit reconstruction
+2. Extract the bottleneck layer representations (latent space)
+3. Compare these representations with traditional PCA by:
+- Visualizing the 2D projections of both
+- Measuring reconstruction quality at comparable compression ratios
+- Analyzing the feature importance in both approaches
+
+<br></br>
+<strong>
+    Important:
+
+    Write a brief analysis (200-500 words) addressing:
+
+    1. What are the key strengths and limitations of the PCA variant you explored?
+    2. In what real-world scenarios would this approach be particularly useful?
+    3. How does the computational complexity scale with dataset size?
+    4. What improvements or modifications would you suggest to the method?
+</strong>

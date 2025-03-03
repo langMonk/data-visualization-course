@@ -1,0 +1,25 @@
+### 3: Classic PCA Analysis on MNIST (4 points)
+
+* Download the MNIST data set (there is a function to load this set in libraries such as scikit-learn, keras). It is a collection of black and white photos of handwritten digits with a resolution of 28x28 pixels, which together gives 784 dimensions.
+
+* Try to visualize this dataset using PCA and KernelPCA, don't expect full separation of the data.
+
+* Similar to the exercises, examine explained variance. Draw explained variance vs number of principal Components plot.
+
+* Find number of principal components for 99%, 95%, 90%, and 85% of explained variance.
+
+* Draw some sample MNIST digits and from PCA of its images transform data back to its [original space](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA.inverse_transform). Make an inverse transformation for number of components corresponding with explained variance shown above and draw the reconstructed images. The idea of this exercise is to see visually how depending on the number of components some information is lost.
+
+* Perform the same [reconstruction](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA.inverse_transform) using KernelPCA (make comparisons for the same components number).
+
+<br></br>
+<strong>
+Important:
+
+Write a brief analysis (200-500 words) addressing:
+
+1. What are the key strengths and limitations of the PCA variant you explored?
+2. In what real-world scenarios would this approach be particularly useful?
+3. How does the computational complexity scale with dataset size?
+4. What improvements or modifications would you suggest to the method?
+</strong>

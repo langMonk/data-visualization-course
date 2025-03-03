@@ -1,0 +1,29 @@
+#### Mathematical Formulation
+
+We define a kernel function:
+
+$$K(\mathbf{x}_i, \mathbf{x}_j) = \phi(\mathbf{x}_i)^T\phi(\mathbf{x}_j)$$
+
+Common kernel functions include:
+- Polynomial: $K(\mathbf{x}_i, \mathbf{x}_j) = (\mathbf{x}_i^T\mathbf{x}_j + c)^d$
+- RBF/Gaussian: $K(\mathbf{x}_i, \mathbf{x}_j) = \exp(-\gamma\|\mathbf{x}_i - \mathbf{x}_j\|^2)$
+- Sigmoid: $K(\mathbf{x}_i, \mathbf{x}_j) = \tanh(\alpha\mathbf{x}_i^T\mathbf{x}_j + c)$
+
+#### Key Differences from PCA
+
+1. **Nonlinearity**: While PCA can only identify linear patterns, Kernel PCA can capture nonlinear relationships in the data.
+
+2. **Implicit Feature Space**: Kernel PCA operates in a potentially infinite-dimensional feature space without explicitly computing the transformation.
+
+3. **Computational Approach**: Instead of eigendecomposition of the covariance matrix, Kernel PCA solves the eigenvalue problem for the kernel matrix $\mathbf{K}$ where $K_{ij} = K(\mathbf{x}_i, \mathbf{x}_j)$.
+
+4. **Hyperparameter Selection**: Kernel PCA requires selecting an appropriate kernel function and its parameters, making it more flexible but also more complex to optimize.
+
+5. **Pre-image Problem**: Unlike PCA, reconstructing original data from Kernel PCA projections (the "pre-image problem") is non-trivial and often approximated.
+
+#### When to Use Kernel PCA
+
+Kernel PCA is particularly useful when:
+- The data has nonlinear patterns that linear PCA cannot capture
+- Visualization of complex, high-dimensional data is needed
+- Pre-processing for nonlinear classification problems

@@ -1,0 +1,75 @@
+### Mathematical Foundation
+
+From a mathematical perspective, PCA can be viewed as an eigendecomposition of the data covariance matrix or as a singular value decomposition (SVD) of the data matrix.
+
+#### Problem Formulation
+
+Given a dataset $\mathbf{X} \in \mathbb{R}^{n \times p}$ with $n$ observations and $p$ features, our goal is to find a linear transformation that maps this data to a lower-dimensional space while maximizing variance.
+
+Let $\mathbf{X}$ be a centered matrix (meaning each feature has zero mean). The sample covariance matrix is:
+
+$\mathbf{C} = \frac{1}{n-1}\mathbf{X}^T\mathbf{X}$
+
+PCA aims to find a set of orthogonal vectors $\mathbf{w}_1, \mathbf{w}_2, \ldots, \mathbf{w}_k$ (where $k < p$) such that the projection of the data onto these vectors has maximum variance.
+
+#### Optimization Problem
+
+For the first principal component, we aim to find:
+
+$$\mathbf{w}_1 = \arg\max_{\|\mathbf{w}\|=1} \mathbf{w}^T\mathbf{C}\mathbf{w}$$
+
+This objective function represents the variance of the data when projected onto $\mathbf{w}$. The constraint $\|\mathbf{w}\|=1$ ensures that $\mathbf{w}$ is a unit vector.
+
+The solution to this optimization problem is the eigenvector corresponding to the largest eigenvalue of $\mathbf{C}$. Similarly, the $j$-th principal component corresponds to the eigenvector of the $j$-th largest eigenvalue.
+
+#### Eigendecomposition Approach
+
+Let's decompose the covariance matrix $\mathbf{C}$ into its eigenvalues and eigenvectors:
+
+$$\mathbf{C} = \mathbf{V}\mathbf{\Lambda}\mathbf{V}^T$$
+
+where:
+- $\mathbf{V}$ is a matrix with eigenvectors as its columns
+- $\mathbf{\Lambda}$ is a diagonal matrix with eigenvalues in descending order
+
+The principal components are the columns of $\mathbf{V}$, with the first column corresponding to the largest eigenvalue, representing the direction of maximum variance.
+
+#### SVD Approach
+
+Alternatively, we can use Singular Value Decomposition (SVD) directly on the centered data matrix:
+
+$$\mathbf{X} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^T$$
+
+where:
+- $\mathbf{U}$ is an $n \times n$ orthogonal matrix
+- $\mathbf{\Sigma}$ is an $n \times p$ diagonal matrix with non-negative singular values
+- $\mathbf{V}$ is a $p \times p$ orthogonal matrix
+
+The principal components are the columns of $\mathbf{V}$, and the principal scores (projections of data onto principal components) are given by $\mathbf{X}\mathbf{V}$.
+
+#### Data Projection
+
+Once we have found the principal components, we can project the original data onto the lower-dimensional space:
+
+$$\mathbf{T} = \mathbf{X}\mathbf{W}$$
+
+where $\mathbf{W} = [\mathbf{w}_1, \mathbf{w}_2, \ldots, \mathbf{w}_k]$ contains the first $k$ principal components.
+
+The reconstructed data in the original space can be obtained by:
+
+$$\mathbf{X}_{rec} = \mathbf{T}\mathbf{W}^T$$
+
+The error between the original and reconstructed data is minimized in the least-squares sense.
+
+### Conceptual Understanding
+
+Dimensions are simply features that represent the data. For example, a 28 × 28 image has 784 pixels, each being a dimension or feature that collectively represents the image.
+
+One important characteristic of PCA is that it's an unsupervised dimensionality reduction technique. This means it can cluster similar data points based on feature correlations without any supervision (labels).
+
+PCA is essentially a statistical procedure that applies an orthogonal transformation to convert a set of possibly correlated variables into a set of linearly uncorrelated variables called principal components. Throughout this tutorial, the terms features, dimensions, and variables are used interchangeably.
+
+## Links
+
+- [StatQuest explanation of PCA](https://www.youtube.com/watch?v=FgakZw6K1QQ&ab_channel=StatQuestwithJoshStarmer)
+
