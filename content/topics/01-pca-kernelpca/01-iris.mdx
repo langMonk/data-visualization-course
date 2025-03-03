@@ -1,0 +1,106 @@
+## PCA on Iris Dataset
+
+In this section we will decompose with PCA a very simple 4-dimensional data set. This is one of the best known pattern recognition datasets. The data set contains 3 classes of 50 instances each, where each class refers to a type of iris plant. One class is linearly separable from the other 2; the latter are NOT linearly separable from each other.
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_boston
+from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import RFE
+
+%matplotlib inline
+```
+
+```python
+iris_url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+
+# loading dataset into Pandas DataFrame
+df_iris = pd.read_csv(iris_url, names=['sepal length','sepal width','petal length','petal width','target'])
+
+df_iris.head(15)
+```
+
+In the case that the dimensionality of the data allows it, it is good practice to see how each pair of features correlate with each other. In the following link you will find more methods for visualizing multidimensional data using matplotlib and seaborn libraries:
+https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
+
+```python
+sns.pairplot(df_iris, hue='target')
+```
+
+You can immediately see that the features petal length and petal width are strongly correlated.
+
+## Standardize the Data
+
+Since PCA yields a feature subspace that maximizes the variance along the axes, it makes sense to standardize the data, especially, if it was measured on different scales. Although, all features in the Iris dataset were measured in centimeters, let us continue with the transformation of the data onto unit scale (mean=0 and variance=1), which is a requirement for the optimal performance of many machine learning algorithms.
+
+```python
+features_iris = ['sepal length', 'sepal width', 'petal length', 'petal width']
+x_iris = df_iris.loc[:, features_iris].values
+
+y_iris = df_iris.loc[:,['target']].values
+
+x_iris = StandardScaler().fit_transform(x_iris)
+
+df_iris_standarize = pd.DataFrame(data = x_iris, columns = features_iris)
+df_iris_standarize['target'] = df_iris['target']
+df_iris_standarize.head(15)
+
+sns.pairplot(df_iris_standarize, hue='target')
+```
+
+We can see that the distributions are now standardized.
+
+## PCA Projection to 2D
+
+```python
+pca_iris = PCA(n_components=2)
+
+principalComponents_iris = pca_iris.fit_transform(x_iris)
+
+principalDf_iris = pd.DataFrame(data = principalComponents_iris, columns = ['principal component 1', 'principal component 2'])
+
+finalDf_iris = pd.concat([principalDf_iris, df_iris[['target']]], axis = 1)
+finalDf_iris.head(15)
+```
+
+## Visualize 2D Projection
+
+Use a PCA projection to 2D to visualize the entire data set. You should plot different classes using different colors or shapes.
+
+```python
+fig = plt.figure(figsize = (8,8))
+ax = fig.add_subplot(1,1,1)
+ax.set_xlabel('Principal Component 1', fontsize = 15)
+ax.set_ylabel('Principal Component 2', fontsize = 15)
+ax.set_title('2 Component PCA', fontsize = 20)
+
+iris_targets = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
+colors = ['r', 'g', 'b']
+for target, color in zip(iris_targets, colors):
+    indicesToKeep = finalDf_iris['target'] == target
+    ax.scatter(finalDf_iris.loc[indicesToKeep, 'principal component 1']
+               , finalDf_iris.loc[indicesToKeep, 'principal component 2']
+               , c = color
+               , s = 50)
+ax.legend(iris_targets)
+ax.grid()
+```
+
+Iris-setosa is linearly separable from other classes.
+
+## Explained Variance
+
+The explained variance tells us how much information (variance) can be attributed to each of the principal components.
+
+```python
+pca_iris.explained_variance_ratio_
+```
+
+Together, the first two principal components contain 95.80% of the information. The first principal component contains 72.77% of the variance and the second principal component contains 23.03% of the variance. The third and fourth principal component contained the rest of the variance of the dataset.
+
