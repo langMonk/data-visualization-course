@@ -1,0 +1,40 @@
+## Kernel PCA
+
+PCA is a linear method. That is it can only be applied to datasets which are linearly separable. It does an excellent job for datasets, which are linearly separable. But, if we use it to non-linear datasets, we might get a result which may not be the optimal dimensionality reduction. Kernel PCA uses a kernel function to project dataset into a higher dimensional feature space, where it is linearly separable. It is similar to the idea of Support Vector Machines.
+
+```python
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_moons
+
+X, y = make_moons(n_samples = 500, noise = 0.02, random_state = 417)
+
+plt.scatter(X[:, 0], X[:, 1], c = y)
+plt.show()
+```
+
+Let's apply PCA on this dataset:
+
+```python
+pca = PCA(n_components = 2)
+X_pca = pca.fit_transform(X)
+
+plt.title("PCA")
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c = y)
+plt.xlabel("Component 1")
+plt.ylabel("Component 2")
+plt.show()
+```
+
+PCA failed to distinguish the two classes.
+
+```python
+from sklearn.decomposition import KernelPCA
+kpca = KernelPCA(kernel ='rbf', gamma = 15)
+X_kpca = kpca.fit_transform(X)
+
+plt.title("Kernel PCA")
+plt.scatter(X_kpca[:, 0], X_kpca[:, 1], c = y)
+plt.show()
+```
+
+Applying kernel PCA on this dataset with RBF kernel with a gamma value of 15 allows for a better separation of the classes.

@@ -1,0 +1,137 @@
+## Modern Enhancements to PCA
+
+In last years, several advancements have been made to traditional PCA to address its limitations and extend its applications.
+
+### Robust PCA
+
+Traditional PCA is sensitive to outliers. Robust PCA attempts to separate a data matrix into a low-rank component and a sparse component, making it more resilient to anomalies and outliers in the dataset.
+
+```python
+# Example of Robust PCA implementation
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+def robust_pca(X, n_components=2, max_iter=10, tol=1e-7):
+    """A simple implementation of Robust PCA"""
+    # Initialize
+    n, m = X.shape
+    L = np.zeros((n, m))
+    S = np.zeros((n, m))
+
+    mu = 1.0 / np.sqrt(n)
+    lam = 1.0 / np.sqrt(n)
+
+    for i in range(max_iter):
+        # Update L using SVD
+        Y = X - S
+        U, sigma, Vt = np.linalg.svd(Y, full_matrices=False)
+
+        # Apply soft thresholding
+        sigma_threshold = np.maximum(sigma - mu, 0)
+        r = np.count_nonzero(sigma_threshold)
+
+        if r > 0:
+            L = U[:, :r] @ np.diag(sigma_threshold[:r]) @ Vt[:r, :]
+        else:
+            L = np.zeros_like(X)
+
+        # Update S using soft thresholding
+        Y = X - L
+        S = np.sign(Y) * np.maximum(np.abs(Y) - lam, 0)
+
+        # Check convergence
+        if np.linalg.norm(X - L - S, 'fro') / np.linalg.norm(X, 'fro') < tol:
+            break
+
+    # Apply standard PCA on the low-rank component L
+    pca = PCA(n_components=n_components)
+    L_transformed = pca.fit_transform(L)
+
+    return L_transformed, L, S, pca
+```
+
+### Sparse PCA
+
+Sparse PCA enforces sparsity in the loading vectors, making the principal components easier to interpret by involving fewer original variables.
+
+```python
+from sklearn.decomposition import SparsePCA
+
+# Example usage:
+spca = SparsePCA(n_components=2, alpha=1, ridge_alpha=0.01)
+X_transformed = spca.fit_transform(X)
+```
+
+### Incremental PCA (IPCA)
+
+Incremental PCA is a variant of PCA that allows for efficient computation when dealing with large datasets that don't fit into memory or when data arrives in a streaming fashion.
+
+```python
+from sklearn.decomposition import IncrementalPCA
+
+# Initialize
+ipca = IncrementalPCA(n_components=2, batch_size=100)
+
+# Fit in batches
+for batch in np.array_split(X, 10):
+    ipca.partial_fit(batch)
+
+# Transform the data
+X_ipca = ipca.transform(X)
+```
+
+### Probabilistic PCA (PPCA)
+
+PPCA views PCA as a probabilistic latent variable model, allowing for a more principled approach to handling missing data and making it possible to combine PCA with other probabilistic models.
+
+```python
+from sklearn.decomposition import PCA
+import numpy as np
+from scipy.stats import multivariate_normal
+
+# Simplified Probabilistic PCA implementation
+class PPCA:
+    def __init__(self, n_components=2):
+        self.n_components = n_components
+
+    def fit(self, X):
+        n_samples, n_features = X.shape
+
+        # Center the data
+        self.mean_ = np.mean(X, axis=0)
+        X_centered = X - self.mean_
+
+        # Perform eigendecomposition
+        pca = PCA(n_components=self.n_components)
+        pca.fit(X_centered)
+
+        # Store components and eigenvalues
+        self.components_ = pca.components_
+        self.explained_variance_ = pca.explained_variance_
+
+        # Calculate sigma squared (noise variance)
+        remaining_variance = np.mean(pca.explained_variance_ratio_[self.n_components:]) \
+                             if self.n_components < n_features else 0
+        self.noise_variance_ = remaining_variance
+
+        return self
+
+    def transform(self, X):
+        X_centered = X - self.mean_
+        return X_centered @ self.components_.T
+
+    def sample(self, n_samples=1):
+        # Sample from latent space
+        latent = np.random.normal(0, 1, size=(n_samples, self.n_components))
+
+        # Project to original space
+        X_sampled = latent @ self.components_
+
+        # Add noise
+        noise = np.random.normal(0, np.sqrt(self.noise_variance_),
+                                 size=(n_samples, self.components_.shape[1]))
+
+        # Add mean
+        return X_sampled + noise + self.mean_
+```
