@@ -1,0 +1,11 @@
+### 1. Perform PCA for Breast Cancer Dataset (3 points)
+
+* You can find this dataset in the scikit-learn library, import it and convert to pandas dataframe. Original labels are '0' and '1'; for better readability change these names to: 'benign' and 'malignant'.
+
+* Visualize correlations between pairs of features (due to the greater number of features use pandas corr() function instead of pairplot and seaborn heatmap()).
+
+* Perform PCA and visualize the data.
+
+* Examine explained variance, draw a plot showing relation between total explained variance and number of principal components used.
+
+* Use recursive feature elimination (available in scikit-learn module) or another feature ranking algorithm to split 30 features into 15 "more important" and 15 "less important" features. Then repeat the last step from the full data set - draw a plot showing relation between total explained variance and number of principal components used for all 3 cases. Explain the result briefly.

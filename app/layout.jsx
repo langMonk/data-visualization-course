@@ -28,6 +28,7 @@ export default async function RootLayout({ children }) {
         <Head>
         </Head>
         <body>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.css" />
         <Layout
             //banner={banner}
             navbar={navbar}
