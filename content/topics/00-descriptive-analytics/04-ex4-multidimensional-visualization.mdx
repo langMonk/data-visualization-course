@@ -1,0 +1,66 @@
+# Exercise 4: Multidimensional Visualization
+
+## Objective
+Develop advanced visualization techniques to represent three or more dimensions simultaneously, enabling deeper insights into complex relationships within the wine dataset.
+
+## Background
+As datasets grow in complexity, we need methods to visualize multiple dimensions at once. This exercise explores techniques for representing 3+ dimensional data through creative use of visualization elements such as position, color, size, shape, and faceting.
+
+## Tasks
+
+### 1. Three-Dimensional Visualization
+
+#### Three Continuous Variables:
+- Create a 3D scatter plot with three continuous variables of your choice (e.g., residual sugar, fixed acidity, and alcohol)
+- Experiment with viewing angles to best reveal the data structure
+- Discuss any patterns, clusters, or relationships you observe in three-dimensional space
+
+#### Size as a Third Dimension:
+- Create a 2D scatter plot where the size of points represents a third variable
+- Use residual sugar as the size indicator for points in a plot of two other variables
+- Explain the advantages and limitations of using size to represent a dimension
+
+#### Three Categorical Dimensions:
+- Use a facet plot (e.g., seaborn's `factorplot` or `catplot`) to visualize the relationship between quality, wine type, and quality label
+- Analyze how the different categorical dimensions interact
+
+### 2. Four-Dimensional Visualization
+
+Create visualizations that incorporate four dimensions:
+
+- 3D scatter plot with color as the fourth dimension:
+- Create a 3D scatter plot where point colors represent wine type
+- Interpret how wine type relates to the three continuous variables
+
+- Bubble chart with size and color:
+- Create a scatter plot where both size and color encode different variables
+- Use appropriate variables that might reveal interesting patterns (e.g., position: acidity & alcohol; size: residual sugar; color: wine type)
+
+- FacetGrid for faceted visualization:
+- Create a FacetGrid with quality label as columns, wine type as hue, and plot two continuous variables
+- Repeat with different continuous variables
+- Compare how variable relationships differ across facets
+
+### 3. Five and Six-Dimensional Visualization
+
+Push the boundaries of visualization with high-dimensional techniques:
+
+- Create a visualization with five dimensions using:
+- x, y, z positions (3D scatter)
+- color (wine type)
+- size (total sulfur dioxide)
+- Interpret what insights can be gained from this complex visualization
+
+- Create a visualization with six dimensions by adding:
+- Faceting (by quality or quality label)
+- Different marker shapes based on another categorical variable
+- Discuss whether the added complexity enhances understanding or creates confusion
+
+## Analysis Questions
+
+For each multidimensional visualization:
+
+1. What patterns become visible in higher dimensions that weren't apparent in simpler views?
+2. Which combinations of variables reveal the most interesting relationships?
+3. At what point does adding more dimensions make the visualization harder to interpret?
+4. How do red and white wines cluster in multidimensional space?
