@@ -1,0 +1,89 @@
+# Descriptive Analytics
+
+## Introduction
+
+Descriptive analytics is a foundational approach to understanding data through visualization and statistical summaries. In this module, we'll explore techniques for analyzing wine data, focusing on various visualization methods to gain insights into relationships between attributes.
+
+## Import Necessary Dependencies
+
+For the exercises in this module, you'll need the following Python libraries:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib as mpl
+import numpy as np
+import seaborn as sns
+
+%matplotlib inline
+```
+
+## Data Overview: Wine Quality Dataset
+
+### Understanding Wine and Types
+
+Wine is an alcoholic beverage made from grapes which is fermented without the addition of sugars, acids, enzymes, water, or other nutrients.
+
+**Red wine** is made from dark red and black grapes. The color usually ranges from various shades of red, brown and violet. This is produced with whole grapes including the skin which adds to the color and flavor of red wines, giving it a rich flavor.
+
+**White wine** is made from white grapes with no skins or seeds. The color is usually straw-yellow, yellow-green, or yellow-gold. Most white wines have a light and fruity flavor as compared to richer red wines.
+
+The dataset is available [here](https://aghedupl-my.sharepoint.com/:f:/g/personal/minch_agh_edu_pl/EgpYX47SyENIm2U-WTTuApwB0xytfTsNwO7Fl3Jw3QH8AA?e=zx8ltE)
+
+### Wine Attributes and Properties
+
+- **fixed acidity:** Acids contribute to taste. Fixed acids include tartaric, malic, citric, and succinic acids found in grapes. Measured in g(tartaricacid)/dm³.
+
+- **volatile acidity:** These acids should be distilled out from wine before production completion. Primarily acetic acid, excess amounts lead to unpleasant flavor. Measured in g(aceticacid)/dm³.
+
+- **citric acid:** Provides freshness, mostly consumed during fermentation. Measured in g/dm³.
+
+- **residual sugar:** Natural sugar from grapes remaining after fermentation. Measured in g/dm³.
+
+- **chlorides:** Contributes to saltiness. Measured in g(sodiumchloride)/dm³.
+
+- **free sulfur dioxide:** The unbound portion of SO₂ added to wine. Used as a preservative. Measured in mg/dm³.
+
+- **total sulfur dioxide:** Sum of bound and free SO₂. Preserves quality and freshness. Measured in mg/dm³.
+
+- **density:** Comparison of wine weight to equivalent water volume. Measured in g/cm³.
+
+- **pH:** Numeric scale for acidity/basicity. Most wines have pH between 2.9 and 3.9.
+
+- **sulphates:** Mineral salts containing sulfur that affect aroma and flavor. Measured in g(potassiumsulphate)/dm³.
+
+- **alcohol:** Formed during fermentation. Measured as percent volume (ABV).
+
+- **quality:** Expert ratings from 0 (very bad) to 10 (excellent).
+
+- **wine_type:** Red or white.
+
+- **quality_label:** Derived from quality scores: low (3-5), medium (6-7), high (8-9).
+
+## Visualization Techniques
+
+In this module, we'll explore different approaches to visualizing data, progressing from simple to complex:
+
+### Univariate Analysis
+Examining a single variable at a time to understand its distribution, central tendency, and spread.
+
+### Multivariate Analysis
+Exploring relationships between two or more variables to identify patterns, correlations, and potential causal relationships.
+
+### Dimensional Visualization
+Techniques for visualizing data with:
+- Two dimensions (scatter plots, heatmaps)
+- Three dimensions (3D plots, paired plots with hue)
+- Four+ dimensions (using size, color, shape, facets)
+
+## Applications in Wine Data Analysis
+
+The wine dataset offers rich opportunities for descriptive analytics:
+
+1. **Quality Assessment**: Understanding what attributes correlate with higher-quality wines
+2. **Wine Type Classification**: Identifying distinctive features between red and white wines
+3. **Feature Relationships**: Exploring how different chemical properties interact
+4. **Outlier Detection**: Finding unusual wines that don't follow typical patterns
+
+Through the exercises, you'll develop skills in choosing appropriate visualization techniques for different analytical goals and interpreting the resulting visualizations to derive meaningful insights.

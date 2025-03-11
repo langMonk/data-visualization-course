@@ -1,0 +1,65 @@
+# Exercise 3: Multivariate Analysis
+
+## Objective
+Explore relationships between multiple variables to identify patterns, correlations, and potential insights into wine quality determinants.
+
+## Background
+Multivariate analysis examines multiple variables simultaneously to understand how they relate to each other. This is where we begin to uncover deeper insights about our data, identifying correlations, patterns, and relationships that might not be apparent when looking at individual variables.
+
+## Tasks
+
+### 1. Correlation Analysis
+
+One of the best ways to identify relationships between different data attributes is through correlation analysis:
+
+- Create a correlation matrix for all numeric attributes using the pandas `corr()` method
+- Visualize the correlation matrix as a heatmap using seaborn
+- Identify the attributes with the strongest positive and negative correlations to quality
+- Write a brief interpretation of the key relationships you observe
+
+### 2. Pairwise Scatter Plots
+
+Visualize relationships between multiple variables at once:
+
+- Create a pairplot for 4 attributes of your choosing (e.g., `density`, `residual sugar`, `total sulfur dioxide`, `fixed acidity`)
+- Add color coding to distinguish between red and white wines
+- Identify any visible patterns or clusters in the data
+- Discuss which attributes show the clearest separation between wine types
+
+### 3. Parallel Coordinates
+
+Parallel coordinates provide another way to visualize multiple attributes together:
+
+- Select 5-6 key attributes and create a parallel coordinates plot
+- Scale the data appropriately before plotting (hint: use `StandardScaler` from sklearn)
+- Color the lines by wine type
+- Analyze how the attributes differ between red and white wines
+
+### 4. Two-Variable Visualizations
+
+Create visualizations to explore specific two-variable relationships:
+
+#### Two Continuous Variables:
+- Create a scatter plot and joint plot for two continuous variables (e.g., sulphates and alcohol)
+- Add a regression line to identify any linear relationship
+- Calculate and report the correlation coefficient
+
+#### Two Categorical Variables:
+- Create visualizations showing the relationship between wine type and quality
+- Use appropriate plots (bar charts, count plots, etc.)
+- Analyze whether red or white wines tend to have higher quality ratings
+
+#### Mixed Variable Types (Continuous & Categorical):
+- Create box plots and violin plots showing how a continuous variable (e.g., alcohol content) varies across different quality levels
+- Create separate histograms for a continuous variable (e.g., sulphates) grouped by wine type
+- Discuss the key differences you observe between groups
+
+## Analysis Questions
+
+For each visualization you create, consider these questions:
+
+1. What patterns or relationships do you observe?
+2. How do these relationships differ between red and white wines?
+3. Which variables appear most strongly associated with wine quality?
+4. Are there any surprising or counterintuitive relationships?
+
