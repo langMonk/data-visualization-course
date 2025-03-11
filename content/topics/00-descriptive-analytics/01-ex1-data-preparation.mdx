@@ -11,9 +11,9 @@ In this exercise, you will set up the wine quality dataset for analysis by loadi
 2. Load the winequality-white.csv and winequality-red.csv into Pandas DataFrames
 3. Add `wine_type` as an attribute to each DataFrame (label red wines as 'red' and white wines as 'white')
 4. Use the `apply` method and pd.Categorical to encode a new `quality_label` attribute with categorical values:
-- 'low': quality scores in range [0, 5)
-- 'medium': quality scores in range [5, 7)
-- 'high': quality scores in range [7, 10]
+    - 'low': quality scores in range [0, 5)
+    - 'medium': quality scores in range [5, 7)
+    - 'high': quality scores in range [7, 10]
 5. Merge the red and white wine datasets into a single DataFrame called `wines`
 6. Re-shuffle records to randomize data points (use `sample` method with `random_state` for reproducibility)
 
