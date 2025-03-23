@@ -1,0 +1,58 @@
+# Large Datasets Visualization Projects
+
+## General Information
+
+1. Projects are to be completed in groups of 2-3 students.
+2. Each group selects one topic from those listed below. Topics should not be repeated within the same lab group.
+3. Consultations are available continuously (any time that can be arranged with the instructor).
+4. A minimum of 2 consultations per group is required.
+
+## Timeline
+
+| Deadline | Milestone |
+|----------|-----------|
+| March 24 - March 28 | Submit preliminary seminar in Teams (approach description) |
+| June 17 | Final report |
+
+Each group must create a preliminary seminar and upload it to the Teams platform. This should present the theoretical aspects of the topic (e.g., the method). At the end, groups should submit a final report + code + execution instructions.
+
+## Tools
+
+There is flexibility in the tools used. Most projects will involve analyzing visualization methods and creating tools for this purpose, so Python is the easiest language to use. It's recommended to package everything in Docker to enable environment-independent execution.
+
+## Project Topics
+
+1. **FVHD Method Verification in Python**
+- Implement the [FVHD method](https://github.com/langMonk/FVHD) in Python
+- Install using the official PyPI package + versioning
+- Prepare documentation and examples for 3 selected datasets
+- Investigate optimization possibilities for the method (to be discussed with the instructor after reviewing the code)
+
+2. **Data Visualization Tool with Streamlit**
+- Create a data visualization tool using the [Streamlit](https://streamlit.io/) library
+- Include state-of-the-art methods: flt-SNE, UMAP, TRIMAP, PaCMAP
+- Include functionality for loading data, limiting it (e.g., taking only 10k samples)
+- Visualize using a selected method
+- Calculate selected metrics (from those used in class)
+
+3. **Interactive Social Media Dashboard**
+- Create an interactive dashboard using [Streamlit](https://streamlit.io/) for exploring interactions on any social platform (e.g., Twitter, Facebook)
+- Enable exploration of different "communities"
+- Find datasets on platforms like [Kaggle](https://www.kaggle.com/) or [Huggingface](https://huggingface.co/)
+- Use traditional graph visualization methods
+
+4. **High-Dimensional Text Data Visualization**
+- Visualize high-dimensional text data (e.g., news articles, tweets) using UMAP, t-SNE, PaCMAP, TriMAP after converting text to vectors (using TF-IDF, word2vec, or similar)
+- Integrate visualization with topic modeling results in a [Streamlit](https://streamlit.io/) application
+- Dynamically examine the prevalence and evolution of topics over time
+
+5. **Text Embedding Visualization Dashboard**
+- Use text embeddings (e.g., created using HuggingFaceEmbeddings) and any vector database (e.g., ElasticSearch)
+- Create a [Streamlit](https://streamlit.io/) dashboard that visualizes these embeddings using UMAP, t-SNE, PaCMAP, TriMAP methods
+
+6. **RAG System with Quantized LLM (for NVIDIA GPU Users)**
+- For students with NVIDIA graphics cards who want to experiment with quantized SLM/LLM models (e.g., Phi4), provided the card can handle it (verify before choosing this topic)
+- Create a system using the RAG mechanism
+- Include a vector database (e.g., Qdrant) and a language model
+- Using Streamlit, create a simple dashboard with a chat interface
+- During responses, highlight the context embeddings that are closest to the question

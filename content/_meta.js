@@ -17,6 +17,10 @@ export default {
                 title: "2. PCA & kernelPCA",
                 href: "/topics/01-pca-kernelpca"
             },
+            "08-projects": {
+                title: "Projects",
+                href: "/topics/08-projects"
+            },
         }
     }
 }
