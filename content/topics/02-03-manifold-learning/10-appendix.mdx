@@ -16,72 +16,72 @@ colors = ["red", "blue", "green", "brown", "orange", "cyan", "grey", "purple"]
 
 @numba.jit(nopython=True)
 def knngain(d_hd, d_ld, labels):
-# Number of data points
-N = d_hd.shape[0]
-N_1 = N - 1
-k_hd = np.zeros(shape=N_1, dtype=np.int64)
-k_ld = np.zeros(shape=N_1, dtype=np.int64)
-# For each data point
-for i in range(N):
-c_i = labels[i]
-di_hd = d_hd[i, :].argsort(kind="mergesort")
-di_ld = d_ld[i, :].argsort(kind="mergesort")
-# Making sure that i is first in di_hd and di_ld
-for arr in [di_hd, di_ld]:
-for idj, j in enumerate(arr):
-if j == i:
-idi = idj
-break
-if idi != 0:
-arr[idi] = arr[0]
-arr = arr[1:]
-for k in range(N_1):
-if c_i == labels[di_hd[k]]:
-k_hd[k] += 1
-if c_i == labels[di_ld[k]]:
-k_ld[k] += 1
-# Computing the KNN gain
-gn = (k_ld.cumsum() - k_hd.cumsum()).astype(np.float64) / (
-(1.0 + np.arange(N_1)) * N
-)
-# Returning the KNN gain and its AUC
-return gn, eval_auc(gn)
+    # Number of data points
+    N = d_hd.shape[0]
+    N_1 = N - 1
+    k_hd = np.zeros(shape=N_1, dtype=np.int64)
+    k_ld = np.zeros(shape=N_1, dtype=np.int64)
+    # For each data point
+    for i in range(N):
+        c_i = labels[i]
+        di_hd = d_hd[i, :].argsort(kind="mergesort")
+        di_ld = d_ld[i, :].argsort(kind="mergesort")
+        # Making sure that i is first in di_hd and di_ld
+        for arr in [di_hd, di_ld]:
+            for idj, j in enumerate(arr):
+                if j == i:
+                    idi = idj
+                    break
+            if idi != 0:
+                arr[idi] = arr[0]
+            arr = arr[1:]
+        for k in range(N_1):
+            if c_i == labels[di_hd[k]]:
+                k_hd[k] += 1
+            if c_i == labels[di_ld[k]]:
+                k_ld[k] += 1
+    # Computing the KNN gain
+    gn = (k_ld.cumsum() - k_hd.cumsum()).astype(np.float64) / (
+        (1.0 + np.arange(N_1)) * N
+    )
+    # Returning the KNN gain and its AUC
+    return gn, eval_auc(gn)
 
 
 @numba.jit(nopython=True)
 def eval_auc(arr):
-i_all_k = 1.0 / (np.arange(arr.size) + 1.0)
-return np.float64(arr.dot(i_all_k)) / (i_all_k.sum())
+    i_all_k = 1.0 / (np.arange(arr.size) + 1.0)
+    return np.float64(arr.dot(i_all_k)) / (i_all_k.sum())
 
 
 @numba.jit(nopython=True)
 def eval_rnx(Q):
-N_1 = Q.shape[0]
-N = N_1 + 1
-# Computing Q_NX
-qnxk = np.empty(shape=N_1, dtype=np.float64)
-acc_q = 0.0
-for K in range(N_1):
-acc_q += Q[K, K] + np.sum(Q[K, :K]) + np.sum(Q[:K, K])
-qnxk[K] = acc_q / ((K + 1) * N)
-# Computing R_NX
-arr_K = np.arange(N_1)[1:].astype(np.float64)
-rnxk = (N_1 * qnxk[: N_1 - 1] - arr_K) / (N_1 - arr_K)
-# Returning
-return rnxk
+    N_1 = Q.shape[0]
+    N = N_1 + 1
+    # Computing Q_NX
+    qnxk = np.empty(shape=N_1, dtype=np.float64)
+    acc_q = 0.0
+    for K in range(N_1):
+        acc_q += Q[K, K] + np.sum(Q[K, :K]) + np.sum(Q[:K, K])
+        qnxk[K] = acc_q / ((K + 1) * N)
+    # Computing R_NX
+    arr_K = np.arange(N_1)[1:].astype(np.float64)
+    rnxk = (N_1 * qnxk[: N_1 - 1] - arr_K) / (N_1 - arr_K)
+    # Returning
+    return rnxk
 
 
 def eval_dr_quality(d_hd, d_ld):
-# Computing the co-ranking matrix of the embedding, and the R_{NX}(K) curve.
-rnxk = eval_rnx(Q=coranking(d_hd=d_hd, d_ld=d_ld))
-# Computing the AUC, and returning.
-return rnxk, eval_auc(rnxk)
+    # Computing the co-ranking matrix of the embedding, and the R_{NX}(K) curve.
+    rnxk = eval_rnx(Q=coranking(d_hd=d_hd, d_ld=d_ld))
+    # Computing the AUC, and returning.
+    return rnxk, eval_auc(rnxk)
 
 
 def coranking(d_hd, d_ld):
-# Computing the permutations to sort the rows of the distance matrices in HDS and LDS.
-perm_hd = d_hd.argsort(axis=-1, kind="mergesort")
-perm_ld = d_ld.argsort(axis=-1, kind="mergesort")
+    # Computing the permutations to sort the rows of the distance matrices in HDS and LDS.
+    perm_hd = d_hd.argsort(axis=-1, kind="mergesort")
+    perm_ld = d_ld.argsort(axis=-1, kind="mergesort")
 
     N = d_hd.shape[0]
     i = np.arange(N, dtype=np.int64)
@@ -98,63 +98,63 @@ perm_ld = d_ld.argsort(axis=-1, kind="mergesort")
 
 
 def viz_qa(
-Ly,
-ymin=None,
-ymax=None,
-Lmarkers=None,
-Lcols=None,
-Lleg=None,
-Lls=None,
-Lmedw=None,
-Lsdots=None,
-lw=2,
-markevery=0.1,
-tit="",
-folder_name="",
-xlabel="",
-ylabel="",
-alpha_plot=0.9,
-alpha_leg=0.8,
-stit=25,
-sax=20,
-sleg=15,
-zleg=1,
-loc_leg="best",
-ncol_leg=1,
-lMticks=10,
-lmticks=5,
-wMticks=2,
-wmticks=1,
-nyMticks=11,
-mymticks=4,
-grid=True,
-grid_ls="solid",
-grid_col="lightgrey",
-grid_alpha=0.7,
-xlog=True,
+    Ly,
+    ymin=None,
+    ymax=None,
+    Lmarkers=None,
+    Lcols=None,
+    Lleg=None,
+    Lls=None,
+    Lmedw=None,
+    Lsdots=None,
+    lw=2,
+    markevery=0.1,
+    tit="",
+    folder_name="",
+    xlabel="",
+    ylabel="",
+    alpha_plot=0.9,
+    alpha_leg=0.8,
+    stit=25,
+    sax=20,
+    sleg=15,
+    zleg=1,
+    loc_leg="best",
+    ncol_leg=1,
+    lMticks=10,
+    lmticks=5,
+    wMticks=2,
+    wmticks=1,
+    nyMticks=11,
+    mymticks=4,
+    grid=True,
+    grid_ls="solid",
+    grid_col="lightgrey",
+    grid_alpha=0.7,
+    xlog=True,
 ):
-# Number of curves
-nc = len(Ly)
-# Checking the parameters
-if ymin is None:
-ymin = np.min(np.asarray([arr.min() for arr in Ly]))
-if ymax is None:
-ymax = np.max(np.asarray([arr.max() for arr in Ly]))
-if Lmarkers is None:
-Lmarkers = ["x"] * nc
-if Lcols is None:
-Lcols = ["blue"] * nc
-if Lleg is None:
-Lleg = [None] * nc
-add_leg = False
-else:
-add_leg = True
-if Lls is None:
-Lls = ["solid"] * nc
-if Lmedw is None:
-Lmedw = [float(lw) / 2.0] * nc
-if Lsdots is None:
-Lsdots = [12] * nc
+    # Number of curves
+    nc = len(Ly)
+    # Checking the parameters
+    if ymin is None:
+        ymin = np.min(np.asarray([arr.min() for arr in Ly]))
+    if ymax is None:
+        ymax = np.max(np.asarray([arr.max() for arr in Ly]))
+    if Lmarkers is None:
+        Lmarkers = ["x"] * nc
+    if Lcols is None:
+        Lcols = ["blue"] * nc
+    if Lleg is None:
+        Lleg = [None] * nc
+        add_leg = False
+    else:
+        add_leg = True
+    if Lls is None:
+        Lls = ["solid"] * nc
+    if Lmedw is None:
+        Lmedw = [float(lw) / 2.0] * nc
+    if Lsdots is None:
+        Lsdots = [12] * nc
 
     # Setting the limits of the y-axis
     y_lim = [ymin, ymax]
@@ -265,13 +265,13 @@ Lsdots = [12] * nc
 
 
 class LocalMetric:
-def __init__(self):
-self.L_rnx = []
-self.L_kg = []
-self.Lleg_rnx = []
-self.Lleg_kg = []
-self.Lls = []
-self.number_of_methods = 0
+    def __init__(self):
+        self.L_rnx = []
+        self.L_kg = []
+        self.Lleg_rnx = []
+        self.Lleg_kg = []
+        self.Lls = []
+        self.number_of_methods = 0
 
     def calculate_knn_gain_and_dr_quality(
         self,
