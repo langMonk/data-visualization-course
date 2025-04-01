@@ -1,5 +1,74 @@
-**MNIST and FMNIST visualization**:
-- Apply each dimensionality reduction method to the MNIST dataset
-- Compare how well each method separates the digit classes
-- Use the nearest neighbor metric to quantify the quality of the embeddings
-- Use the metrics provided as a script to laboratory for comparison purposes
+### Part 1: Dataset Exploration
+
+1. Load the MNIST and Fashion MNIST datasets using scikit-learn or TensorFlow
+2. Explore the basic properties of both datasets:
+- Number of samples
+- Image dimensions
+- Class distribution
+- Display sample images from each class
+
+### Part 2: Apply Dimensionality Reduction Methods
+
+Implement and apply the following dimensionality reduction methods to both datasets:
+
+1. **t-SNE**
+- Apply t-SNE with at least three different perplexity values (e.g., 5, 30, 50)
+- Use early exaggeration and sufficient iterations for convergence
+
+2. **UMAP**
+- Apply UMAP with at least three different parameter combinations:
+- Vary n_neighbors (e.g., 5, 15, 30)
+- Vary min_dist (e.g., 0.1, 0.5, 0.8)
+
+3. **TriMAP**
+- Apply TriMAP with at least two different parameter settings:
+- Vary n_inliers (e.g., 10, 20)
+- Vary n_outliers (e.g., 5, 10)
+
+4. **PaCMAP**
+- Apply PaCMAP with at least two different parameter combinations:
+- Vary n_neighbors (e.g., 10, 30)
+- Vary MN_ratio and FP_ratio (e.g., MN_ratio=0.5/0.8, FP_ratio=1.0/2.0)
+
+### Part 3: Visualization and Qualitative Analysis
+
+For each method and parameter setting:
+
+1. Create 2D scatter plots of the reduced datasets
+- Color points by their class labels
+- Use consistent colormaps across visualizations
+- Include a legend identifying each class
+
+2. Visually assess:
+- How well classes are separated
+- Whether similar classes are positioned near each other
+- The presence of any meaningful global structure
+
+3. Create an enhanced visualization for the best performing configuration of each method:
+- Replace points with miniature versions of the actual digit/fashion item images
+- Limit to a representative subset (e.g., 500-1000 points) for clarity
+
+### Part 4: Quantitative Evaluation
+
+1. Use the Nearest Neighbor Class Fidelity (cf) metric.
+
+2. For each method and parameter setting, calculate:
+- The cf metric
+- Trustworthiness
+- Additional metrics from the provided laboratory script
+
+3. Create comparison tables and visualizations of these metrics
+
+### Part 5: Analysis and Report
+
+Write a comprehensive analysis (500-750 words) that addresses:
+
+1. Which dimensionality reduction method best separates the classes in each dataset?
+2. How do the optimal parameters differ between MNIST and Fashion MNIST?
+3. Are certain classes consistently easier or harder to separate?
+4. How do the quantitative metrics correlate with visual quality?
+5. What are the trade-offs between the different methods in terms of:
+    - Computational efficiency
+    - Class separation
+    - Global structure preservation
+    - Sensitivity to hyperparameters

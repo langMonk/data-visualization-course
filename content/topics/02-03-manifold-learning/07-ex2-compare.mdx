@@ -1,4 +1,45 @@
-**Compare dimensionality reduction methods**:
-- Experiment with different hyperparameters for each method (perplexity for t-SNE, n_neighbors for UMAP, etc.)
-- Generate visualizations of the roulade with different parameter settings
-- Evaluate which method best preserves the spiral structure
+# Dimensionality Reduction Methods Comparison Task
+
+### Part 1: Generate Roulade Visualizations
+1. Use the provided roulade generator functions to create 50-100 different visualizations by varying:
+- Spiral density (spiral_density parameter)
+- Number of points (spiral_steps parameter)
+- Layer distance (width parameter)
+- Angle between layers (angle parameter)
+- Roll density (roll_density parameter)
+
+2. For each parameter combination:
+- Generate a 3D roulade structure
+- Project it to 2D using PCA method
+- Save the resulting 2D visualization as an image
+
+### Part 2: Embed Visualization Images Using Dimensionality Reduction
+
+Treat each saved image as a high-dimensional data point (where each pixel is a dimension) and reduce them to 2D using three methods:
+
+1. **PCA**
+- Implement basic PCA
+- No additional hyperparameters required
+
+2. **t-SNE**
+- Implement with at least three different perplexity values (e.g., 5, 30, 50)
+
+3. **UMAP**
+- Implement with at least three different combinations of n_neighbors and min_dist
+- For example: (n_neighbors=5, min_dist=0.1), (n_neighbors=15, min_dist=0.5), etc.
+
+### Part 3: Create Meta-Visualizations
+
+For each dimensionality reduction method:
+1. Create a 2D scatter plot of the embedded images
+2. Replace each point with a miniature of the original visualization image
+3. Include clear labels indicating the parameter settings used for each method
+
+
+### Part 4: Analysis
+
+Write a 300-500 word analysis that addresses:
+- Which method best preserves the spiral structure of the original roulade?
+- How do different hyperparameter settings affect the results?
+- What patterns can you observe in how similar visualizations are grouped?
+- How do the quantitative results from the cf metric align with visual assessments?
