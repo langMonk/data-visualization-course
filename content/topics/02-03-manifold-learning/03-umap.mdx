@@ -1,0 +1,58 @@
+#### Mathematical Formulation
+
+#### Simplicial Complexes and Fuzzy Topology
+
+UMAP uses concepts from topological data analysis, particularly simplicial complexes and fuzzy topology. The key insight is to model the data manifold using a fuzzy topological structure.
+
+UMAP constructs a weighted $k$-nearest neighbor graph to represent the high-dimensional manifold, with edge weights derived from the distances between points.
+
+#### Local Metric Spaces
+
+For each point $\mathbf{x}_i$, UMAP defines a local metric space with a distance function $d_i$ and a set of neighboring points $\{\mathbf{x}_j\}$ where $j$ is a neighbor of $i$.
+
+The normalized local distance is:
+
+$$\hat{d}(i, j) = \frac{d(i, j) - \rho_i}{\sigma_i}$$
+
+where $\rho_i$ is the distance to the nearest neighbor of $\mathbf{x}_i$, and $\sigma_i$ is a normalization factor chosen based on the effective scale of the local metric space.
+
+#### Fuzzy Set Representation
+
+The fuzzy topological representation in the high-dimensional space is defined by:
+
+$$v_{i, j} = \exp\left(-\frac{d(i, j) - \rho_i}{\sigma_i}\right)$$
+
+And in the low-dimensional space by:
+
+$$w_{i, j} = \left(1 + a \|\mathbf{y}_i - \mathbf{y}_j\|^{2b}\right)^{-1}$$
+
+where $a$ and $b$ are parameters that determine the shape of the curve.
+
+#### Cross-Entropy Optimization
+
+UMAP minimizes the cross-entropy between the high and low-dimensional fuzzy topological representations:
+
+$$C = \sum_{i,j} \left[ v_{i,j} \log\left(\frac{v_{i,j}}{w_{i,j}}\right) + (1 - v_{i,j}) \log\left(\frac{1 - v_{i,j}}{1 - w_{i,j}}\right) \right]$$
+
+This is optimized using stochastic gradient descent with:
+
+$$\frac{\partial C}{\partial \mathbf{y}_i} = 2ab \sum_{j \neq i} \left[ \frac{v_{i,j}}{w_{i,j}} - \frac{1 - v_{i,j}}{1 - w_{i,j}} \right] w_{i,j} \|\mathbf{y}_i - \mathbf{y}_j\|^{2b-2} (\mathbf{y}_i - \mathbf{y}_j)$$
+
+#### Embedding Initialization
+
+UMAP can initialize the low-dimensional embedding using spectral methods or other dimensionality reduction techniques, which can help convergence and improve the global structure preservation.
+
+The Laplacian eigenmap initialization uses the $d$ eigenvectors corresponding to the smallest non-zero eigenvalues of the graph Laplacian matrix:
+
+$$\mathbf{L} = \mathbf{D} - \mathbf{A}$$
+
+where $\mathbf{A}$ is the adjacency matrix of the $k$-nearest neighbor graph and $\mathbf{D}$ is the degree matrix.
+
+### Key Theoretical Differences
+
+#### t-SNE vs. UMAP
+
+- **Mathematical Foundation**: t-SNE uses probabilistic modeling with Gaussian and Student's t-distributions, while UMAP is based on Riemannian geometry and algebraic topology.
+- **Loss Function**: t-SNE minimizes Kullback-Leibler divergence, while UMAP uses cross-entropy.
+- **Global Structure**: UMAP typically preserves more of the global structure than t-SNE, especially with default parameters.
+- **Scalability**: UMAP generally has better computational efficiency and can handle larger datasets more effectively.

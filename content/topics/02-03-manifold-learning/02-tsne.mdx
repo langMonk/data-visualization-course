@@ -1,0 +1,70 @@
+### t-Distributed Stochastic Neighbor Embedding (t-SNE)
+
+t-SNE is a non-linear technique for dimensionality reduction that is particularly well suited for the visualization of high-dimensional datasets. It is extensively applied in image processing, NLP, genomic data, and speech processing.
+
+#### How t-SNE Works
+
+1. The algorithm starts by calculating the probability of similarity of points in high-dimensional space and calculating the probability of similarity of points in the corresponding low-dimensional space. The similarity of points is calculated as the conditional probability that a point A would choose point B as its neighbor if neighbors were picked in proportion to their probability density under a Gaussian (normal distribution) centered at A.
+
+2. It then tries to minimize the difference between these conditional probabilities (or similarities) in higher-dimensional and lower-dimensional space for a perfect representation of data points in lower-dimensional space.
+
+3. To measure the minimization of the sum of difference of conditional probability, t-SNE minimizes the sum of Kullback-Leibler divergence of overall data points using a gradient descent method.
+
+In simpler terms, t-SNE minimizes the divergence between two distributions: a distribution that measures pairwise similarities of the input objects and a distribution that measures pairwise similarities of the corresponding low-dimensional points in the embedding.
+
+t-SNE maps the multi-dimensional data to a lower-dimensional space and attempts to find patterns in the data by identifying observed clusters based on similarity of data points with multiple features. However, after this process, the input features are no longer identifiable, and you cannot make any inference based only on the output of t-SNE. Hence it is mainly a data exploration and visualization technique.
+
+
+#### Mathematical Formulation
+
+### t-Distributed Stochastic Neighbor Embedding (t-SNE)
+
+#### Joint Probability Distributions
+
+t-SNE defines two probability distributions: one in the high-dimensional space and another in the low-dimensional space. It then minimizes the Kullback-Leibler divergence between these distributions.
+
+Given data points $\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_n$ in the high-dimensional space $\mathbb{R}^D$, t-SNE computes pairwise affinities $p_{j|i}$ representing the probability that $\mathbf{x}_i$ would pick $\mathbf{x}_j$ as its neighbor:
+
+$$p_{j|i} = \frac{\exp\left(-\|\mathbf{x}_i - \mathbf{x}_j\|^2 / 2\sigma_i^2\right)}{\sum_{k \neq i} \exp\left(-\|\mathbf{x}_i - \mathbf{x}_k\|^2 / 2\sigma_i^2\right)}$$
+
+where $\sigma_i$ is the bandwidth of the Gaussian kernel centered at $\mathbf{x}_i$, determined by the perplexity parameter.
+
+The joint probabilities in the high-dimensional space are defined as:
+
+$$p_{ij} = \frac{p_{j|i} + p_{i|j}}{2n}$$
+
+Similarly, in the low-dimensional space $\mathbb{R}^d$, t-SNE defines probabilities $q_{ij}$ based on the Student's t-distribution with one degree of freedom:
+
+$$q_{ij} = \frac{(1 + \|\mathbf{y}_i - \mathbf{y}_j\|^2)^{-1}}{\sum_{k \neq l} (1 + \|\mathbf{y}_k - \mathbf{y}_l\|^2)^{-1}}$$
+
+where $\mathbf{y}_1, \mathbf{y}_2, \ldots, \mathbf{y}_n$ are the corresponding points in the low-dimensional space.
+
+#### Optimization Objective
+
+The objective function is the Kullback-Leibler divergence between the joint probability distributions $P$ and $Q$:
+
+$$C = \text{KL}(P \| Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}$$
+
+t-SNE minimizes this cost function using gradient descent. The gradient with respect to $\mathbf{y}_i$ is:
+
+$$\frac{\partial C}{\partial \mathbf{y}_i} = 4 \sum_{j \neq i} (p_{ij} - q_{ij})(1 + \|\mathbf{y}_i - \mathbf{y}_j\|^2)^{-1}(\mathbf{y}_i - \mathbf{y}_j)$$
+
+#### Perplexity Parameter
+
+The perplexity is related to the number of nearest neighbors that are considered in the probability distribution. The relationship between perplexity and the bandwidth $\sigma_i$ is:
+
+$$\text{Perp}(P_i) = 2^{H(P_i)}$$
+
+where $H(P_i)$ is the Shannon entropy of the conditional probability distribution $P_i$:
+
+$$H(P_i) = -\sum_{j \neq i} p_{j|i} \log_2 p_{j|i}$$
+
+t-SNE performs a binary search to find the value of $\sigma_i$ that achieves the desired perplexity.
+
+### Key Theoretical Differences
+
+#### MDS vs. t-SNE
+
+- **Distance Preservation**: MDS focuses on preserving all pairwise distances, while t-SNE emphasizes preserving local neighborhoods.
+- **Global vs. Local**: MDS better preserves global structure, while t-SNE excels at revealing local clusters.
+- **Linear vs. Non-linear**: Classical MDS is essentially equivalent to PCA when using Euclidean distances, making it a linear method, while t-SNE is inherently non-linear.

@@ -1,0 +1,64 @@
+### Additional Modern Manifold Learning Methods
+
+In recent years, several additional manifold learning methods have been developed that offer improvements over t-SNE:
+
+#### UMAP (Uniform Manifold Approximation and Projection)
+
+UMAP is a more recent technique that addresses some limitations of t-SNE:
+- It maintains the global structure of the data more effectively
+- It offers faster computation and better scalability
+- It can be used for general non-linear dimension reduction tasks
+
+```python
+import umap
+
+def show_UMAP(data, labels, n_neighbors=15, min_dist=0.1):
+    reducer = umap.UMAP(n_neighbors=n_neighbors, min_dist=min_dist)
+    embedding = reducer.fit_transform(data)
+
+    plt.figure(figsize=(10, 8))
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Spectral')
+    plt.colorbar(boundaries=np.arange(11)-0.5).set_ticks(np.arange(10))
+    plt.title(f'UMAP projection (n_neighbors={n_neighbors}, min_dist={min_dist})')
+    plt.show()
+```
+
+#### TriMAP
+
+TriMAP extends the idea of preserving global and local structures of high-dimensional data by focusing on triplet relationships among data points:
+- It keeps an anchor data point closer to a positive point than to a negative point
+- It often maintains both local and global structures better than t-SNE and UMAP in certain cases
+
+```python
+import trimap
+
+def show_TriMAP(data, labels, n_neighbors=10):
+    embedding = trimap.TRIMAP(n_inliers=n_neighbors).fit_transform(data)
+
+    plt.figure(figsize=(10, 8))
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Spectral')
+    plt.colorbar(boundaries=np.arange(11)-0.5).set_ticks(np.arange(10))
+    plt.title(f'TriMAP projection (n_neighbors={n_neighbors})')
+    plt.show()
+```
+
+#### PaCMAP (Pairwise Controlled Manifold Approximation and Projection)
+
+PaCMAP is designed to address limitations of t-SNE and UMAP with less computational overhead:
+- It explicitly balances the preservation of local and global data relationships
+- It provides an efficient and scalable approach to visualizing high-dimensional data
+
+```python
+import pacmap
+
+def show_PaCMAP(data, labels, n_neighbors=10, MN_ratio=0.5, FP_ratio=2.0):
+    embedding = pacmap.PaCMAP(n_neighbors=n_neighbors,
+                             MN_ratio=MN_ratio,
+                             FP_ratio=FP_ratio).fit_transform(data)
+
+    plt.figure(figsize=(10, 8))
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Spectral')
+    plt.colorbar(boundaries=np.arange(11)-0.5).set_ticks(np.arange(10))
+    plt.title(f'PaCMAP projection (n_neighbors={n_neighbors})')
+    plt.show()
+```
