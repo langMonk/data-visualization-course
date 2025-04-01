@@ -7,6 +7,10 @@ export default {
         title: "PCA & kernelPCA",
         type: "page"
     },
+    "02-03-manifold-learning": {
+        title: "Manifold Learning",
+        type: "page"
+    },
     "08-projects": {
         title: "Projects",
         type: "page"

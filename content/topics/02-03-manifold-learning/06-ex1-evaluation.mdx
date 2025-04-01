@@ -1,0 +1,27 @@
+# Nearest Neighbor Class Fidelity (cf) Metric Implementation
+
+## Task Description
+
+Implement the Nearest Neighbor Class Fidelity metric to evaluate the quality of dimensionality reduction methods. This metric quantifies how well class relationships are preserved when data is projected to lower dimensions.
+
+## Mathematical Background
+
+The metric is defined as:
+$$cf = \frac{\sum_{nn=1}^{nn_{max}}cf_{nn}}{nn_{max}}$$
+
+Where $cf_{nn}$ is calculated as:
+$$cf_{nn} = \frac{\sum_{i=1}^{M}nn(i)}{nn \cdot M}$$
+
+In these formulas:
+- $nn(i)$ is the number of nearest neighbors of point $y_i$ in the low-dimensional space that belong to the same class as $x_i$ in the original space
+- $M$ is the total number of data points
+- $nn_{max}$ is the maximum number of nearest neighbors to consider (use 100 for this assignment)
+
+The interpretation is:
+- $cf \approx 1$ indicates well-separated, pure classes after dimensionality reduction
+- $cf \approx \frac{1}{K}$ indicates random point placement, where $K$ is the number of classes
+
+1. Implement a function to calculate the $cf_{nn}$ metric in Python
+2. Apply your implementation to compare at least three dimensionality reduction methods (e.g., PCA, t-SNE, UMAP, MDS) on a dataset of your choice
+3. Create a visualization that shows the $cf_{nn}$ values for different numbers of nearest neighbors (1 to $nn_{max}$)
+4. Write a brief analysis (200-300 words) comparing the performance of different methods based on this metric

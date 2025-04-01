@@ -1,0 +1,58 @@
+### Multi-Dimensional Scaling (MDS)
+
+MDS is a distance-preserving manifold learning method. Distance-preserving methods assume that a manifold can be defined by the pairwise distances of its points.
+
+MDS takes a dissimilarity matrix D where D_ij represents the dissimilarity between points i and j and produces a mapping to a lower dimension, preserving the dissimilarities as closely as possible. The dissimilarity matrix could be observed or calculated from the given dataset.
+
+#### Types of MDS
+
+MDS can be divided into two categories:
+
+- **Metric MDS**: Used for quantitative data and tries to preserve the original dissimilarity metrics.
+- **Non-Metric MDS**: Used for ordinal data. It tries to keep the order of dissimilarity metrics intact.
+
+#### Mathematical Formulation
+
+Multi-Dimensional Scaling (MDS) aims to find a low-dimensional representation of data that preserves pairwise distances between points as faithfully as possible.
+
+Given a set of $n$ objects and a distance matrix $\mathbf{D} = (d_{ij})$ where $d_{ij}$ represents the dissimilarity between objects $i$ and $j$, MDS seeks to find points $\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_n$ in a lower-dimensional space $\mathbb{R}^d$ such that the distances between these points approximate the original dissimilarities.
+
+#### Metric MDS Objective Function
+
+In classical Metric MDS, we minimize the stress function:
+
+$$\text{Stress}(\mathbf{X}) = \sqrt{\frac{\sum_{i < j} (d_{ij} - \|\mathbf{x}_i - \mathbf{x}_j\|)^2}{\sum_{i < j} d_{ij}^2}}$$
+
+where:
+- $\mathbf{X} = [\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_n]^T$ is the configuration of points in the lower-dimensional space
+- $\|\mathbf{x}_i - \mathbf{x}_j\|$ is the Euclidean distance between points $i$ and $j$ in the lower-dimensional space
+
+#### Classical MDS Algorithm
+
+When the dissimilarities are Euclidean distances, classical MDS has an analytical solution:
+
+1. Compute the matrix of squared dissimilarities $\mathbf{D}^{(2)} = (d_{ij}^2)$
+
+2. Apply double centering to create the Gram matrix $\mathbf{B}$:
+$$\mathbf{B} = -\frac{1}{2}\mathbf{J}\mathbf{D}^{(2)}\mathbf{J}$$
+where $\mathbf{J} = \mathbf{I} - \frac{1}{n}\mathbf{1}\mathbf{1}^T$ is the centering matrix, $\mathbf{I}$ is the identity matrix, and $\mathbf{1}$ is a vector of ones.
+
+3. Compute the eigendecomposition of $\mathbf{B}$:
+$$\mathbf{B} = \mathbf{V}\mathbf{\Lambda}\mathbf{V}^T$$
+where $\mathbf{\Lambda}$ is a diagonal matrix of eigenvalues and $\mathbf{V}$ is a matrix of eigenvectors.
+
+4. Select the $d$ largest eigenvalues $\lambda_1, \lambda_2, \ldots, \lambda_d$ and their corresponding eigenvectors $\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d$.
+
+5. The $d$-dimensional coordinates are given by:
+$$\mathbf{X} = \mathbf{V}_d \mathbf{\Lambda}_d^{1/2}$$
+where $\mathbf{V}_d$ contains the top $d$ eigenvectors and $\mathbf{\Lambda}_d$ contains the corresponding eigenvalues.
+
+#### Non-metric MDS
+
+Non-metric MDS relaxes the assumption that the dissimilarities are Euclidean. Instead, it only preserves the ordinal relationships between dissimilarities.
+
+The objective function becomes:
+
+$$\text{Stress}_{\text{non-metric}}(\mathbf{X}) = \sqrt{\frac{\sum_{i < j} (f(d_{ij}) - \|\mathbf{x}_i - \mathbf{x}_j\|)^2}{\sum_{i < j} \|\mathbf{x}_i - \mathbf{x}_j\|^2}}$$
+
+where $f$ is a monotonic transformation applied to the original dissimilarities to make them as close as possible to the distances in the lower-dimensional space.
