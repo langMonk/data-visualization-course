@@ -21,6 +21,10 @@ export default {
                 title: "3. Manifold Learning",
                 href: "/topics/02-03-manifold-learning"
             },
+            "04-hidden-layers": {
+                title: "4. Activations of hidden layers",
+                href: "/topics/04-hidden-layers"
+            },
             "08-projects": {
                 title: "Projects",
                 href: "/topics/08-projects"

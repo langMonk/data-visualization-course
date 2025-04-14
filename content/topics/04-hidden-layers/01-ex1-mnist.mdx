@@ -1,0 +1,128 @@
+# Exercise 1: MNIST Visualization Using Hidden Layer Activations
+
+In this exercise, you will explore how the activations of hidden layers in a neural network can be used for data visualization and classification.
+
+## Task Description
+
+1. Project the MNIST training data into a 2-dimensional space using different dimensionality reduction techniques:
+- t-SNE
+- TriMAP
+- PaCMAP
+- UMAP
+
+2. Use `layer1_output` and `layer2_output` to project the first and second hidden layers of the neural network into a 2-dimensional space. Apply the same dimensionality reduction methods as in step 1.
+
+3. Visualize both the training and test data projections.
+
+4. Use the 2-dimensional projections for classification:
+- Use embeddings learned on raw training data (and also on hidden activations of training data) to transform test data (and hidden activations of test data) into 2-dimensional space.
+- Implement the k-nearest neighbors algorithm to classify transformed points from the test set, using points from the training set as neighbors with known class assignments.
+- Since t-SNE is a non-linear, non-parametric embedding, you can't use it to transform new points into the existing embedded space. Use only UMAP, which has both `fit_transform` (learn manifold) and `transform` (project new data to existing manifold) methods.
+- Try with several values of `n_neighbors`, e.g., [3, 5, 10].
+
+5. Estimate the classification accuracy using this approach:
+- Compare results for all three inputs (raw data, 1st hidden layer, 2nd hidden layer)
+- Compare results for different values of `n_neighbors`
+
+## Code Template
+
+Here's a template to help you get started:
+
+```python
+# To get hidden activations of test data use:
+test_layer1_output, test_layer2_output, test_layer3_output = get_layer_output([X_test])
+
+# To convert from one-hot encoding back to class labels:
+# Use np.argmax(to_categorical(x, k), axis=1) or K.argmax
+```
+
+### Step 1: Raw Data Embeddings Visualization
+
+```python
+# Import necessary libraries
+from sklearn.manifold import TSNE
+import umap
+# Import other visualization techniques you need
+
+# Apply t-SNE to raw training data
+tsne = TSNE(n_components=2, random_state=42)
+X_train_tsne = tsne.fit_transform(X_train)
+
+# Apply UMAP to raw training data
+umap_model = umap.UMAP(n_components=2, random_state=42)
+X_train_umap = umap_model.fit_transform(X_train)
+
+# Visualize the embeddings
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.scatter(X_train_tsne[:, 0], X_train_tsne[:, 1], c=np.argmax(Y_train, axis=1), cmap='tab10', s=1)
+plt.title('t-SNE: Raw Data')
+plt.colorbar()
+
+plt.subplot(1, 2, 2)
+plt.scatter(X_train_umap[:, 0], X_train_umap[:, 1], c=np.argmax(Y_train, axis=1), cmap='tab10', s=1)
+plt.title('UMAP: Raw Data')
+plt.colorbar()
+plt.tight_layout()
+plt.show()
+
+# Apply UMAP transform to test data
+X_test_umap = umap_model.transform(X_test)
+
+# Visualize test data projection
+plt.figure(figsize=(6, 5))
+plt.scatter(X_test_umap[:, 0], X_test_umap[:, 1], c=np.argmax(Y_test, axis=1), cmap='tab10', s=1)
+plt.title('UMAP: Raw Test Data')
+plt.colorbar()
+plt.show()
+```
+
+### Step 2: Hidden Layer 1 Embeddings Visualization
+
+```python
+# Apply the same techniques to the first hidden layer activations
+```
+
+### Step 3: Hidden Layer 2 Embeddings Visualization
+
+```python
+# Apply the same techniques to the second hidden layer activations
+```
+
+### Step 4: Classification and Accuracy Calculation
+
+```python
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Define a function to evaluate KNN on different embeddings
+def evaluate_knn(X_train_embedded, X_test_embedded, y_train, y_test, n_neighbors_list):
+    results = []
+    for n_neighbors in n_neighbors_list:
+        knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+        knn.fit(X_train_embedded, y_train)
+        y_pred = knn.predict(X_test_embedded)
+        accuracy = accuracy_score(y_test, y_pred)
+        results.append((n_neighbors, accuracy))
+        print(f"n_neighbors={n_neighbors}, Accuracy: {accuracy:.4f}")
+    return results
+
+# Convert Y_train and Y_test to class labels
+y_train = np.argmax(Y_train, axis=1)
+y_test = np.argmax(Y_test, axis=1)
+
+# Test KNN with different numbers of neighbors
+n_neighbors_list = [3, 5, 10]
+
+print("Raw Data UMAP Embeddings:")
+raw_results = evaluate_knn(X_train_umap, X_test_umap, y_train, y_test, n_neighbors_list)
+
+# Repeat for hidden layer 1 and hidden layer 2 embeddings
+```
+
+## Expected Outcomes
+
+1. You should observe that the visualization of hidden layer activations shows better clustering compared to raw data visualization.
+2. The second hidden layer activations should generally show clearer class separation than the first hidden layer.
+3. Classification accuracy should generally improve when using hidden layer activations compared to raw data, with the later layers typically providing better performance.
+4. The choice of `n_neighbors` will impact performance, with the optimal value possibly differing between raw data and hidden layer embeddings.

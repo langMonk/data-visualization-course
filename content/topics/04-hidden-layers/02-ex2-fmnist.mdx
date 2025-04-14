@@ -1,0 +1,87 @@
+# Exercise 2: Fashion-MNIST Visualization
+
+In this exercise, you will repeat the procedures and visualizations from Exercise 1, but now using the Fashion-MNIST dataset (or any other dataset of your choice).
+
+## Task Description
+
+The Fashion-MNIST dataset is a dataset of Zalando's article images, consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes:
+
+0. T-shirt/top
+1. Trouser
+2. Pullover
+3. Dress
+4. Coat
+5. Sandal
+6. Shirt
+7. Sneaker
+8. Bag
+9. Ankle boot
+
+## Steps
+
+1. Load and preprocess the Fashion-MNIST dataset.
+2. Create and train a neural network similar to the one used for MNIST.
+3. Extract the hidden layer activations.
+4. Apply dimensionality reduction techniques (t-SNE, TriMAP, PaCMAP, UMAP) to visualize:
+- Raw data
+- First hidden layer activations
+- Second hidden layer activations
+5. Use UMAP embeddings for classification with KNN.
+6. Compare the results with those obtained for the MNIST dataset.
+
+## Code Template
+
+```python
+# Load the Fashion-MNIST dataset
+from keras.datasets import fashion_mnist
+
+(X_train, y_train), (X_test, y_test) = fashion_mnist.load_data()
+
+# Preprocess data
+X_train = X_train.reshape(60000, 784)
+X_test = X_test.reshape(10000, 784)
+X_train = X_train.astype("float32")
+X_test = X_test.astype("float32")
+
+# Normalize data
+X_train /= 255
+X_test /= 255
+
+# Convert class vectors to binary class matrices
+Y_train = np_utils.to_categorical(y_train, 10)
+Y_test = np_utils.to_categorical(y_test, 10)
+
+# Split training and validation data
+X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train, train_size=5/6)
+
+# Build and train the neural network
+# ...
+
+# Extract hidden layer activations
+# ...
+
+# Apply visualization techniques
+# ...
+
+# Perform classification using KNN
+# ...
+```
+
+## Expected Outcomes
+
+1. Compare the visualization results between MNIST and Fashion-MNIST:
+- Are class boundaries clearer in one dataset versus the other?
+- Do hidden layer activations provide better separation in Fashion-MNIST compared to raw data?
+- Which classes in Fashion-MNIST are most easily confused in the visualizations?
+
+2. Compare classification performance:
+- How does accuracy on Fashion-MNIST compare to MNIST?
+- Does using hidden layer activations provide a similar boost in performance for Fashion-MNIST as it did for MNIST?
+- Which classes benefit most from using hidden layer activations for classification?
+
+## Discussion Questions
+
+1. How does the neural network's representation of fashion items differ from its representation of digits?
+2. What might explain any differences in visualization clarity or classification performance between the two datasets?
+3. Which dimensionality reduction technique works best for Fashion-MNIST, and is this the same as what worked best for MNIST?
+4. How might you modify the neural network architecture to improve visualization or classification for Fashion-MNIST specifically?

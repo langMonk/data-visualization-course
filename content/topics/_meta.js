@@ -11,6 +11,10 @@ export default {
         title: "Manifold Learning",
         type: "page"
     },
+    "04-hidden-layers": {
+        title: "Activations of hidden layers",
+        type: "page"
+    },
     "08-projects": {
         title: "Projects",
         type: "page"
