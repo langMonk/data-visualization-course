@@ -15,6 +15,10 @@ export default {
         title: "Activations of hidden layers",
         type: "page"
     },
+    "05-case-study": {
+        title: "Case study",
+        type: "page"
+    },
     "08-projects": {
         title: "Projects",
         type: "page"

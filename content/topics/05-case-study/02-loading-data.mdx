@@ -1,0 +1,55 @@
+## Loading Spatial Transcriptomics Data
+
+Spatial transcriptomics data typically consists of:
+1. A gene expression matrix (spots × genes)
+2. Spatial coordinates for each spot or cell
+3. Histology images of the tissue section
+4. Annotations (when available)
+
+For this laboratory, we'll work with two different datasets:
+- Human brain dorsolateral prefrontal cortex (DLPFC) from Visium
+- Breast cancer spatial transcriptomics data
+
+Let's first load the DLPFC dataset:
+
+```python
+# Load the DLPFC dataset through squidpy's dataset functionality
+adata = sq.datasets.visium_hne_adata()
+
+# Basic data exploration
+print(f"Dataset shape: {adata.shape}")
+print(f"Number of spots: {adata.n_obs}")
+print(f"Number of genes: {adata.n_vars}")
+print(f"Available annotations: {list(adata.obs.columns)}")
+
+# View tissue image with spots overlaid
+plt.figure(figsize=(10, 10))
+sc.pl.spatial(adata, img_key="hires", size=1.5)
+
+# If annotation is available, visualize with layer annotation
+if 'layer_guess' in adata.obs.columns:
+    plt.figure(figsize=(10, 10))
+    sc.pl.spatial(adata, color='layer_guess', size=1.5)
+```
+
+Now, let's explore the basic structure of the data:
+
+```python
+# Display the first few entries of the gene expression matrix
+print("Gene expression matrix (first 5 spots, first 5 genes):")
+print(adata.X[0:5, 0:5].toarray())
+
+# Display spatial coordinates
+print("\nSpatial coordinates (first 5 spots):")
+print(adata.obsm['spatial'][0:5])
+
+# Check available layers in the AnnData object
+print("\nAvailable layers:", list(adata.layers.keys()))
+
+# Check available metadata
+print("\nSpot metadata:")
+print(adata.obs.head())
+
+# Check gene metadata
+print("\nGene metadata:")
+print(adata.var.head())

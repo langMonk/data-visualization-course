@@ -1,0 +1,129 @@
+# Exercise 1: Visualizing Human Brain DLPFC Spatial Data
+
+In this exercise, you will explore the spatial organization of the human dorsolateral prefrontal cortex (DLPFC) using dimensionality reduction techniques applied to both raw data and neural network hidden layer activations.
+
+## Task Description
+
+1. Project the DLPFC spatial transcriptomics data into a 2-dimensional space using different dimensionality reduction techniques:
+- t-SNE
+- UMAP
+- TriMAP
+- PaCMAP
+
+2. Use the neural network's hidden layer activations to create alternative 2-dimensional projections with the same techniques.
+
+3. Visualize both the standard embeddings and the spatial context of these embeddings.
+
+4. Use the 2-dimensional projections for layer classification:
+- Implement k-nearest neighbors to classify the embedded test data
+- Compare accuracy across different embedding techniques
+- Try with several values of `n_neighbors`, e.g., [3, 5, 10]
+
+5. Analyze spatial domains and cell-cell interactions:
+- Identify regions with transitional gene expression patterns
+- Detect boundary zones between cortical layers
+- Visualize the relationship between spatial proximity and expression similarity
+
+## Code Template
+
+Here's a template to help you get started:
+
+```python
+# Apply t-SNE to raw data
+tsne = TSNE(n_components=2, random_state=42)
+X_train_tsne = tsne.fit_transform(X_train)
+
+# Apply UMAP to raw data
+umap_model = umap.UMAP(n_components=2, random_state=42)
+X_train_umap = umap_model.fit_transform(X_train)
+X_test_umap = umap_model.transform(X_test)
+
+# Apply TriMAP to raw data
+trimap_model = trimap.TRIMAP(n_dims=2, n_inliers=10, n_outliers=5, random_state=42)
+X_train_trimap = trimap_model.fit_transform(X_train)
+
+# Apply PaCMAP to raw data
+pacmap_model = pacmap.PaCMAP(n_components=2, n_neighbors=10, random_state=42)
+X_train_pacmap = pacmap_model.fit_transform(X_train)
+
+# Visualize the embeddings
+plt.figure(figsize=(20, 5))
+for i, (embedding, name) in enumerate(zip(
+    [X_train_tsne, X_train_umap, X_train_trimap, X_train_pacmap],
+    ['t-SNE', 'UMAP', 'TriMAP', 'PaCMAP']
+)):
+    plt.subplot(1, 4, i+1)
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=np.argmax(Y_train, axis=1),
+                cmap='tab10', s=3)
+    plt.title(f'{name}: Raw Data')
+    plt.colorbar()
+plt.tight_layout()
+plt.show()
+```
+
+### Spatial Visualization
+
+An important part of this exercise is to visualize how the embeddings relate to the actual spatial organization of the tissue:
+
+```python
+# Visualize embeddings in spatial context
+def plot_spatial_embedding(embedding, title, labels, spatial_coords):
+    plt.figure(figsize=(15, 6))
+
+    # Display the embedding
+    plt.subplot(1, 2, 1)
+    scatter = plt.scatter(embedding[:, 0], embedding[:, 1],
+                          c=labels, cmap='tab10', s=5)
+    plt.title(f'{title} Embedding')
+    plt.colorbar(scatter)
+
+    # Display the same points in their spatial locations
+    plt.subplot(1, 2, 2)
+    plt.scatter(spatial_coords[:, 0], spatial_coords[:, 1],
+                c=labels, cmap='tab10', s=5)
+    plt.title(f'Spatial Organization')
+    plt.colorbar(scatter)
+    plt.tight_layout()
+    plt.show()
+
+# Get spatial coordinates for your spots
+spatial_coords = adata.obsm['spatial'][train_indices]  # Assuming you've tracked indices
+y_labels = np.argmax(Y_train, axis=1)
+
+# Plot embeddings in spatial context
+plot_spatial_embedding(X_train_umap, 'UMAP Raw Data', y_labels, spatial_coords)
+```
+
+### KNN Classification
+
+```python
+# Define a function to evaluate KNN on different embeddings
+def evaluate_knn(X_train_embedded, X_test_embedded, y_train, y_test, n_neighbors_list):
+    results = []
+    for n_neighbors in n_neighbors_list:
+        knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+        knn.fit(X_train_embedded, y_train)
+        y_pred = knn.predict(X_test_embedded)
+        accuracy = accuracy_score(y_test, y_pred)
+        results.append((n_neighbors, accuracy))
+        print(f"n_neighbors={n_neighbors}, Accuracy: {accuracy:.4f}")
+    return results
+
+# Convert one-hot encoded labels to class indices
+y_train = np.argmax(Y_train, axis=1)
+y_test = np.argmax(Y_test, axis=1)
+
+# Test KNN with different numbers of neighbors
+n_neighbors_list = [3, 5, 10]
+
+print("Raw Data UMAP Embeddings:")
+raw_results = evaluate_knn(X_train_umap, X_test_umap, y_train, y_test, n_neighbors_list)
+```
+
+## Expected Outcomes
+
+1. You should observe that the visualization of hidden layer activations shows better clustering of cortical layers compared to raw data visualization.
+2. The second hidden layer activations should generally show clearer boundaries between brain regions than the first hidden layer.
+3. Classification accuracy should improve when using hidden layer activations compared to raw data.
+4. By overlaying the embeddings on spatial coordinates, you should see coherent spatial patterns in the tissue that correspond to known anatomical structures.
+5. The boundary regions between different cortical layers should be visible as transitional zones in both the embeddings and spatial visualizations.

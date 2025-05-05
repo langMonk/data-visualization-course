@@ -25,6 +25,10 @@ export default {
                 title: "4. Activations of hidden layers",
                 href: "/topics/04-hidden-layers"
             },
+            "05-case-study": {
+                title: "5. Case study",
+                href: "/topics/05-case-study"
+            },
             "08-projects": {
                 title: "Projects",
                 href: "/topics/08-projects"

@@ -1,0 +1,43 @@
+## Setting Up the Environment
+
+In this section, we'll install and import all necessary libraries for working with spatial transcriptomics data and applying dimensionality reduction techniques.
+
+```python
+# Import necessary libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scanpy as sc
+import squidpy as sq
+from sklearn.preprocessing import StandardScaler
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import backend as K
+from tensorflow.keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Dimensionality reduction libraries
+from sklearn.manifold import TSNE
+import umap
+import trimap
+import pacmap
+
+# Set random seeds for reproducibility
+np.random.seed(42)
+tf.random.set_seed(42)
+
+# Plotting settings
+plt.rcParams['figure.figsize'] = (12, 10)
+sc.settings.verbosity = 3
+```
+
+If you don't have some of these libraries installed, you can install them with pip:
+
+```python
+!pip install scanpy squidpy tensorflow scikit-learn umap-learn trimap pacmap
+```

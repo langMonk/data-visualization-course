@@ -1,0 +1,194 @@
+# Exercise 2: Spatial Analysis of Breast Cancer Microenvironment
+
+In this exercise, you will analyze spatial transcriptomics data from breast cancer tissue to identify tumor microenvironment components, visualize tumor heterogeneity, and detect interaction patterns between tumor and immune cells.
+
+## Task Description
+
+1. Load and preprocess the breast cancer spatial transcriptomics dataset:
+```python
+# Load the breast cancer dataset
+adata_bc = sq.datasets.visium_fluo_adata()
+   ```
+
+2. Apply dimensionality reduction to visualize tumor heterogeneity:
+- Use t-SNE, UMAP, TriMAP, and PaCMAP on the raw expression data
+- Train a neural network to extract hidden layer representations
+- Apply the same dimensionality reduction techniques to hidden layer activations
+
+3. Identify tumor and stromal regions:
+- Use marker genes to annotate tumor cells, immune cells, and stromal cells
+- Visualize these annotations in both embedding space and spatial coordinates
+
+4. Analyze spatial interactions:
+- Quantify cell-type interactions based on spatial proximity
+- Identify tumor-immune interaction hotspots
+- Detect boundary regions between tumor and stroma
+
+5. Integrate hidden layer representations with spatial information:
+- Analyze how neural network representations capture tumor heterogeneity
+- Compare different visualization methods for identifying tumor subclones
+- Investigate how well the representations preserve neighborhood relationships
+
+## Code Template
+
+```python
+# Load breast cancer dataset
+adata_bc = sq.datasets.visium_fluo_adata()
+
+# Basic data exploration
+print(f"Dataset shape: {adata_bc.shape}")
+print(f"Available annotations: {list(adata_bc.obs.columns)}")
+
+# Preprocess data
+sc.pp.normalize_total(adata_bc, target_sum=1e4)
+sc.pp.log1p(adata_bc)
+sc.pp.highly_variable_genes(adata_bc, n_top_genes=2000)
+adata_bc_hvg = adata_bc[:, adata_bc.var.highly_variable]
+sc.pp.scale(adata_bc_hvg)
+
+# View tissue structure
+plt.figure(figsize=(12, 10))
+sc.pl.spatial(adata_bc, img_key="hires", size=1.5)
+```
+
+### Identifying Marker Genes and Cell Types
+
+```python
+# Define marker genes for different cell types
+tumor_markers = ['EPCAM', 'KRT19', 'KRT8', 'KRT18']
+immune_markers = ['CD3D', 'CD4', 'CD8A', 'CD68', 'CD163']
+stromal_markers = ['COL1A1', 'VIM', 'ACTA2', 'FAP']
+
+# Calculate scores for each cell type
+sc.tl.score_genes(adata_bc, tumor_markers, score_name='tumor_score')
+sc.tl.score_genes(adata_bc, immune_markers, score_name='immune_score')
+sc.tl.score_genes(adata_bc, stromal_markers, score_name='stromal_score')
+
+# Visualize marker gene expression and scores
+plt.figure(figsize=(15, 12))
+for i, marker in enumerate(tumor_markers + immune_markers + stromal_markers):
+    if marker in adata_bc.var_names:
+        plt.subplot(4, 4, i+1)
+        sc.pl.spatial(adata_bc, color=marker, size=1.5, show=False)
+        plt.title(marker)
+plt.tight_layout()
+plt.show()
+
+# Visualize cell type scores
+plt.figure(figsize=(15, 4))
+plt.subplot(1, 3, 1)
+sc.pl.spatial(adata_bc, color='tumor_score', size=1.5, show=False)
+plt.title('Tumor Score')
+plt.subplot(1, 3, 2)
+sc.pl.spatial(adata_bc, color='immune_score', size=1.5, show=False)
+plt.title('Immune Score')
+plt.subplot(1, 3, 3)
+sc.pl.spatial(adata_bc, color='stromal_score', size=1.5, show=False)
+plt.title('Stromal Score')
+plt.tight_layout()
+plt.show()
+```
+
+### Training Neural Network and Extracting Features
+
+```python
+# Prepare data for neural network
+X_bc = adata_bc_hvg.X.copy()
+
+# For simplicity, we'll use unsupervised approach with autoencoder
+# Define a simple autoencoder
+input_dim = X_bc.shape[1]
+encoding_dim = 64
+
+# Encoder
+input_layer = tf.keras.layers.Input(shape=(input_dim,))
+encoder = tf.keras.layers.Dense(256, activation='relu')(input_layer)
+encoder = tf.keras.layers.Dropout(0.2)(encoder)
+encoder = tf.keras.layers.Dense(encoding_dim, activation='relu')(encoder)
+
+# Decoder
+decoder = tf.keras.layers.Dense(256, activation='relu')(encoder)
+decoder = tf.keras.layers.Dropout(0.2)(decoder)
+output_layer = tf.keras.layers.Dense(input_dim, activation='sigmoid')(decoder)
+
+# Autoencoder model
+autoencoder = tf.keras.models.Model(inputs=input_layer, outputs=output_layer)
+autoencoder.compile(optimizer='adam', loss='mse')
+
+# Train autoencoder
+autoencoder.fit(X_bc, X_bc, epochs=20, batch_size=64, shuffle=True, validation_split=0.2)
+
+# Create a model to extract the encoded features
+encoder_model = tf.keras.models.Model(inputs=input_layer, outputs=encoder)
+encoded_features = encoder_model.predict(X_bc)
+
+# Get the first hidden layer output as well
+intermediate_layer_model = tf.keras.models.Model(
+    inputs=input_layer,
+    outputs=autoencoder.layers[1].output
+)
+intermediate_output = intermediate_layer_model.predict(X_bc)
+```
+
+### Spatial Interaction Analysis
+
+```python
+# Compute neighborhood graph to analyze cell-cell interactions
+sc.pp.neighbors(adata_bc, use_rep='X_pca')
+
+# Find clusters/regions
+sc.tl.leiden(adata_bc, resolution=0.8)
+
+# Visualize clusters in spatial context
+plt.figure(figsize=(10, 8))
+sc.pl.spatial(adata_bc, color='leiden', size=1.5, legend_loc='on data')
+
+# Compute interaction scores between regions
+def compute_interactions(adata, cluster_key='leiden'):
+    # Count neighbors of different clusters for each spot
+    clusters = adata.obs[cluster_key].cat.categories
+    n_clusters = len(clusters)
+
+    # Get the indices of nearest neighbors from the connectivities matrix
+    connectivity = adata.obsp['connectivities']
+
+    # Initialize interaction matrix
+    interaction_matrix = np.zeros((n_clusters, n_clusters))
+
+    # For each spot, count interactions with spots of different clusters
+    for i in range(adata.n_obs):
+        # Get the cluster of the current spot
+        current_cluster = adata.obs[cluster_key][i]
+        current_idx = np.where(clusters == current_cluster)[0][0]
+
+        # Get indices of neighbors
+        neighbors = connectivity[i].nonzero()[1]
+
+        # Count neighbors by cluster
+        for neighbor in neighbors:
+            neighbor_cluster = adata.obs[cluster_key][neighbor]
+            neighbor_idx = np.where(clusters == neighbor_cluster)[0][0]
+            interaction_matrix[current_idx, neighbor_idx] += 1
+
+    return interaction_matrix, clusters
+
+# Compute and visualize interactions
+interaction_matrix, cluster_names = compute_interactions(adata_bc)
+
+# Visualize interaction matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(interaction_matrix, annot=True, fmt='.0f',
+            xticklabels=cluster_names, yticklabels=cluster_names)
+plt.title('Spatial Interactions Between Clusters')
+plt.xlabel('Target Cluster')
+plt.ylabel('Source Cluster')
+plt.show()
+```
+
+## Expected Outcomes
+
+1. Visualizations should reveal distinct regions of tumor, immune infiltration, and stromal areas in the breast cancer tissue.
+2. Neural network hidden layers should provide better separation between tumor subclones than raw gene expression data.
+3. Spatial analysis should identify regions of tumor-immune cell interactions, which may be biologically significant for understanding cancer progression and treatment response.
+4. Different dimensionality reduction techniques will have varying effectiveness at highlighting tumor heterogeneity and microenvironment structures.
+5. The integration of expression data with spatial information should reveal patterns not evident when analyzing expression or spatial data alone.
